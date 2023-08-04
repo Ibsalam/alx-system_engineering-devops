@@ -1,2 +1,14 @@
 #!/bin/bash
-chown -- from=betty guillaume hello
+# Check if the current user is 'guillaume'
+if [ "$(whoami)" != "guillaume" ]; then
+    echo "This script can only be run by the user 'guillaume'."
+    exit 1
+fi
+# Check if the file 'hello' is owned by 'guillaume'
+if [ "$(stat -c %U hello)" != "guillaume" ]; then
+    echo "The file 'hello' is not owned by 'guillaume'."
+    exit 1
+fi
+# Change the owner of the file 'hello' to 'betty'
+sudo chown betty hello
+echo "File 'hello' ownership changed to 'betty'."
