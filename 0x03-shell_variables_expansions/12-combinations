@@ -1,0 +1,2 @@
+#!/bin/bash
+ech {A..Z}{A..Z} | tr '''\n' | grep -v "oo"
