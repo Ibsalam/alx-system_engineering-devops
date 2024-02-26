@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Script to stop the 4-to_infinity_and_beyond process without using kill and killall
+
+# Check if the process is running
+if pgrep -x "4-to_infinity_and_beyond" > /dev/null; then
+    # Send SIGTERM signal to terminate the process
+    pkill "4-to_infinity_and_beyond"
+    echo "Process 4-to_infinity_and_beyond has been stopped."
+else
+    echo "Process 4-to_infinity_and_beyond is not running."
+fi
