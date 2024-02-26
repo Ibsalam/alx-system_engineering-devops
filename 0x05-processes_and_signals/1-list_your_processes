@@ -1,6 +1,17 @@
- #!/usr/bin/env bash
-# Displays a list of currently running processes.
-#   Shows all processes, for all users, including those
-#+  which might not have a TTY.
+#!/usr/bin/env bash
+# Script to display a list of currently running processes
 
-ps -auxf
+# Display column headers
+printf "%-10s %-20s %-10s %-10s %s\n" "PID" "COMMAND" "PPID" "USER" "TTY"
+
+# Iterate over all processes
+while IFS= read -r line; do
+    pid=$(echo "$line" | awk '{print $1}')
+    command=$(echo "$line" | awk '{$1=""; print $0}')
+    ppid=$(echo "$line" | awk '{print $2}')
+    user=$(echo "$line" | awk '{print $3}')
+    tty=$(echo "$line" | awk '{print $7}')
+
+    # Print process information
+    printf "%-10s %-20s %-10s %-10s %s\n" "$pid" "$command" "$ppid" "$user" "$tty"
+done < <(ps -ef --forest --no-headers)
