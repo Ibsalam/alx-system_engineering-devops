@@ -1,3 +1,7 @@
-exec { 'pkill killmenow':
-	path	=> '/usr/bin:/usr/sbin:/bin',
+# Execute a command
+exec { 'killmenow':
+  command     => 'pkill killmenow',
+  path        => ['/bin', '/usr/bin'],
+  onlyif      => 'pgrep killmenow',
+  refreshonly => true,
 }
