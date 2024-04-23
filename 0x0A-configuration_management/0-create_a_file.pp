@@ -5,3 +5,4 @@ file { '/tmp/scool':
 	group	=> 'www-data',
 	content	=> 'I love Puppet',
 }
+
