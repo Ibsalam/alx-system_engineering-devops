@@ -1,6 +1,36 @@
 #!/usr/bin/env bash
-# sets the port 80.
-sed -i "s/listen 8080 default_server;/listen 80 default_server;/" /etc/nginx/sites-enabled/default
-sed -i "s/listen \[::\]:8080 default_server ipv4only=on;/listen \[::\]:80 default_server;/" /etc/nginx/sites-enabled/default
-sed -i "s/ ipv4only=on//" /etc/nginx/sites-available/default
-service nginx restart
+
+# Step 1: Check Nginx configuration for any misconfigurations
+nginx_config="/etc/nginx/nginx.conf"
+if ! grep -q "listen 80" "$nginx_config"; then
+    echo "Nginx configuration does not specify listening on port 80."
+    exit 1
+fi
+
+# Step 2: Verify if any other process is using port 80
+if sudo netstat -tuln | grep -q ":80 "; then
+    echo "Port 80 is already in use by another process."
+    exit 1
+fi
+
+# Step 3: Ensure Nginx service is running and has not encountered errors
+if ! sudo systemctl is-active --quiet nginx; then
+    echo "Nginx service is not running. Starting Nginx..."
+    sudo systemctl start nginx
+fi
+
+# Check if Nginx is running after attempted start
+if ! sudo systemctl is-active --quiet nginx; then
+    echo "Nginx failed to start. Please check Nginx logs for errors."
+    exit 1
+fi
+
+# Modify Nginx configuration to listen on port 80
+sudo sed -i "s/listen [::]:80 default_server;/listen [::]:80 default_server;/" "$nginx_config"
+sudo sed -i "s/listen 80 default_server;/listen 80 default_server;/" "$nginx_config"
+
+# Restart Nginx to apply changes
+sudo systemctl restart nginx
+
+echo "Nginx is now listening on port 80."
+
