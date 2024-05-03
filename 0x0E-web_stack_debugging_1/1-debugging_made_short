@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
-# Configure Nginx server to listen on port 80
 
-# Creates a symbolic link Nginx file and enables sites dir
-In -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+sed -i "s/listen [::]:8080 default_server;/listen [::]:80 default_server/" /etc/nginx/sites-enabled/default
+sed -i "s/listen 8080 default_server;/listen 80 default_server/" /etc/nginx/sites-enabled/default
+sed -i "s/ ipv4only=on//" /etc/nginx/sites-available/default
+nginx -t && nginx -s reload || echo "nginx is not running"
 
-# Restart Nginx
-service nginx restart
-
-# Terminate the first nginx
-kill "$(pgrep 'nginx' | head -1)"
