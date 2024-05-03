@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-
-sed -i "s/listen [::]:8080 default_server;/listen [::]:80 default_server/" /etc/nginx/sites-enabled/default
-sed -i "s/listen 8080 default_server;/listen 80 default_server/" /etc/nginx/sites-enabled/default
-sed -i "s/ ipv4only=on//" /etc/nginx/sites-available/default
-nginx -t && nginx -s reload || echo "nginx is not running"
-
+# Configures an Nginx server to listen on port 80.
+sed -i "s/8080/80/g" /etc/nginx/sites-enabled/default
+service nginx restart
+kill -9 "$(cat /run/nginx.pid)"
