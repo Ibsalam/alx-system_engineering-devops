@@ -1,32 +1,29 @@
 #!/usr/bin/python3
 '''
-data in the JSON format
+export data in the JSON format
 '''
+
 import json
 import requests
 
 if __name__ == '__main__':
     users_url = "https://jsonplaceholder.typicode.com/users"
     users_data = requests.get(users_url).json()
-    
-    user_dict = {}
-    username_dict = {}
-    
+
+    all_tasks = {}
+
     for user in users_data:
-        user_id = user.get("id")
-        user_dict[user_id] = []
-        username_dict[user_id] = user.get("username")
-    
-    todos_url = "https://jsonplaceholder.typicode.com/todos"
-    todos_data = requests.get(todos_url).json()
-    
-    for todo in todos_data:
-        user_id = todo.get("userId")
-        user_dict[user_id].append({
-            "task": todo.get("title"),
-            "completed": todo.get("completed"),
-            "username": username_dict.get(user_id)
-        })
-    
+        user_id = str(user['id'])
+        username = user['username']
+        todo_url = f"https://jsonplaceholder.typicode.com/todos?userId={user_id}"
+        todo_data = requests.get(todo_url).json()
+
+        tasks = [{"username": username,
+                  "task": task["title"],
+                  "completed": task["completed"]} for task in todo_data]
+
+        all_tasks[user_id] = tasks
+
     with open("todo_all_employees.json", 'w') as json_file:
-        json.dump(user_dict, json_file)
+        json.dump(all_tasks, json_file)
+
