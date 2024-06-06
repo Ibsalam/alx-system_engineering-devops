@@ -1,5 +1,4 @@
-
-# Fixes 500 error when a GET HTTP method is requested to Apache web server
+# Fixes wrong  "phpp" extensions to "php in "wp-settings.php"
 
 exec {'replace':
   provider => shell,
