@@ -1,6 +1,7 @@
-# Fixes wrong  "phpp" extensions to "php in "wp-settings.php"
 
-exec{'fix-wordpress':
-	command => 'sed -i "s/phpp/php/g" /var/www/html/wp-settings.php',
-	path => '/usr/local/bin/:/bin/'
+# Fixes 500 error when a GET HTTP method is requested to Apache web server
+
+exec {'replace':
+  provider => shell,
+  command  => 'sed -i "s/phpp/php/g" /var/www/html/wp-settings.php'
 }
