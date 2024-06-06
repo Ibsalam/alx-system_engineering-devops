@@ -12,7 +12,7 @@ def top_ten(subreddit):
     params = {
             "limit": 10
             }
-    response = requests.get(url, headers=headers, params=params, allow_redirects=False)     #noqa
+    response = requests.get(url, headers=headers, params=params, allow_redirects=False)      # noqa
 
     if response.status_code == 404:
         print(None)
