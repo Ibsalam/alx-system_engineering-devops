@@ -1,13 +1,12 @@
 # Increase nginx to serve more requests
 
- exec {'increase_worker_connections':
+exec {'replace':
   provider => shell,
-  command  => 'sudo sed -i "s/worker_connections 1024;/worker_connections 4096;/" /etc/nginx/nginx.conf',
-  before   => Exec['restart_nginx'],
+  command  => 'sudo sed -i "s/ULIMIT=\"-n 15\"/ULIMIT=\"-n 4096\"/" /etc/default/nginx',
+  before   => Exec['restart'],
 }
 
-exec {'restart_nginx':
+exec {'restart':
   provider => shell,
   command  => 'sudo service nginx restart',
 }
-
